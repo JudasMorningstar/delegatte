@@ -1,0 +1,21 @@
+{
+  "name": "@delegatte/backend",
+  "version": "1.0.0",
+  "description": "",
+  "author": "junademchunu <junade.dev@gmail.com>",
+  "license": "ISC",
+  "scripts": {
+    "dev": "convex dev",
+    "setup": "convex dev --until-success"
+  },
+  "exports": {
+    "./convex": "./convex/*.ts"
+  },
+  "dependencies": {
+    "convex": "^1.27.3"
+  },
+  "devDependencies": {
+    "@delegatte/typescript-config": "workspace:*",
+    "typescript": "latest"
+  }
+}
