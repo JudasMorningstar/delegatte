@@ -6,6 +6,6 @@
       "@delegatte/backend/*": ["./convex/*"]
     }
   },
-  "include": ["."],
+  "include": [".", "*ts"],
   "exclude": ["node_modules"]
 }

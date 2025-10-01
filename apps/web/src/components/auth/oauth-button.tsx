@@ -27,7 +27,6 @@ export default function OAuthSignInButton({
           await authClient.signIn.social({
             provider,
             callbackURL: "/",
-            newUserCallbackURL: "/setup-organization",
           });
         } catch (error) {
           const errorMessage =

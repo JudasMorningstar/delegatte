@@ -2,22 +2,17 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Loader2, X } from "lucide-react";
 
-import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { AuthCard } from "@/components/auth/auth-card";
+import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@delegatte/ui/components/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@delegatte/ui/components/card";
 import { Input } from "@delegatte/ui/components/input";
 import { Label } from "@delegatte/ui/components/label";
 import { toast } from "@delegatte/ui/components/toast";
-import { authClient } from "@/lib/auth-client";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -27,8 +22,18 @@ export default function SignUp() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  const validatePasswords = () => {
+    if (password !== passwordConfirmation) {
+      setPasswordError("Passwords do not match");
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -43,153 +48,148 @@ export default function SignUp() {
   };
 
   return (
-    <Card className="z-50 rounded-md rounded-t-none max-w-md">
-      <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Sign Up</CardTitle>
-        <CardDescription className="text-xs md:text-sm">
-          Enter your information to create an account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="first-name">First name</Label>
-              <Input
-                id="first-name"
-                placeholder="Max"
-                required
-                onChange={(e) => {
-                  setFirstName(e.target.value);
-                }}
-                value={firstName}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="last-name">Last name</Label>
-              <Input
-                id="last-name"
-                placeholder="Robinson"
-                required
-                onChange={(e) => {
-                  setLastName(e.target.value);
-                }}
-                value={lastName}
-              />
-            </div>
-          </div>
+    <AuthCard
+      title="Create an account"
+      description="Enter your information to get started"
+    >
+      <div className="grid gap-6">
+        <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="first-name">First name</Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
+              id="first-name"
+              placeholder="Max"
               required
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              value={email}
+              onChange={(e) => setFirstName(e.target.value)}
+              value={firstName}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="last-name">Last name</Label>
             <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="new-password"
-              placeholder="Password"
+              id="last-name"
+              placeholder="Robinson"
+              required
+              onChange={(e) => setLastName(e.target.value)}
+              value={lastName}
             />
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Confirm Password</Label>
-            <Input
-              id="password_confirmation"
-              type="password"
-              value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-              autoComplete="new-password"
-              placeholder="Confirm Password"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="image">Profile Image (optional)</Label>
-            <div className="flex items-end gap-4">
-              {imagePreview && (
-                <div className="relative w-16 h-16 rounded-sm overflow-hidden">
-                  <Image
-                    src={imagePreview}
-                    alt="Profile preview"
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </div>
-              )}
-              <div className="flex items-center gap-2 w-full">
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="w-full"
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="password">Password</Label>
+          <PasswordInput
+            id="password"
+            required
+            placeholder="********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full"
+            autoComplete="new-password"
+          />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="password_confirmation">Confirm Password</Label>
+          <PasswordInput
+            id="password_confirmation"
+            required
+            placeholder="********"
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            className="w-full"
+            autoComplete="new-password"
+          />
+          {passwordError && (
+            <p className="text-sm text-red-500">{passwordError}</p>
+          )}
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="image">Profile Image (optional)</Label>
+          <div className="flex items-end gap-4">
+            {imagePreview && (
+              <div className="relative h-16 w-16 overflow-hidden rounded-sm">
+                <Image
+                  src={imagePreview}
+                  alt="Profile preview"
+                  fill
+                  className="object-cover"
                 />
-                {imagePreview && (
-                  <X
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setImage(null);
-                      setImagePreview(null);
-                    }}
-                  />
-                )}
               </div>
+            )}
+            <div className="flex w-full items-center gap-2">
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full"
+              />
+              {imagePreview && (
+                <X
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setImage(null);
+                    setImagePreview(null);
+                  }}
+                />
+              )}
             </div>
           </div>
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={loading}
-            onClick={async () => {
-              await authClient.signUp.email({
-                email,
-                password,
-                name: `${firstName} ${lastName}`,
-                image: image ? await convertImageToBase64(image) : "",
-                callbackURL: "/",
-                fetchOptions: {
-                  onResponse: () => {
-                    setLoading(false);
-                  },
-                  onRequest: () => {
-                    setLoading(true);
-                  },
-                  onError: (ctx) => {
-                    toast.error(ctx.error.message);
-                  },
-                  onSuccess: async () => {
-                    router.push("/");
-                  },
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={loading}
+          onClick={async (e) => {
+            if (!validatePasswords()) return;
+            e.preventDefault();
+            await authClient.signUp.email({
+              email,
+              password,
+              name: `${firstName} ${lastName}`,
+              image: image ? await convertImageToBase64(image) : "",
+              callbackURL: "/onboarding",
+              fetchOptions: {
+                onResponse: () => setLoading(false),
+                onRequest: () => setLoading(true),
+                onError: (ctx) => {
+                  toast.error(ctx.error.message);
                 },
-              });
-            }}
-          >
-            {loading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              "Create an account"
-            )}
-          </Button>
+                onSuccess: () => router.push("/onboarding"),
+              },
+            });
+          }}
+        >
+          {loading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            "Create an account"
+          )}
+        </Button>
+
+        <div className="text-center text-sm">
+          Already have an account?{" "}
+          <Link href="/sign-in" className="underline underline-offset-4">
+            Sign in
+          </Link>
         </div>
-      </CardContent>
-      <CardFooter>
-        <div className="flex justify-center w-full border-t py-4">
-          <p className="text-center text-xs text-neutral-500">
-            Secured by <span className="text-orange-400">better-auth.</span>
-          </p>
-        </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </AuthCard>
   );
 }
 

@@ -6,6 +6,6 @@
       "@delegatte/ui/*": ["./src/*"]
     }
   },
-  "include": ["."],
+  "include": [".", "./src/styles/global.d.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 
-import "@delegatte/ui/globals.css";
+import "./styles/globals.css";
 
 import { Toaster } from "@delegatte/ui/components/sonner";
 import { Providers } from "@/components/providers";
