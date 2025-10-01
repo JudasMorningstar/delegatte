@@ -14,6 +14,7 @@ import { Checkbox } from "@delegatte/ui/components/checkbox";
 import { Input } from "@delegatte/ui/components/input";
 import { Label } from "@delegatte/ui/components/label";
 import { Link, Loader2 } from "lucide-react";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignIn() {
@@ -21,6 +22,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const router = useRouter();
 
   return (
     <Card className="max-w-md">
@@ -79,7 +81,7 @@ export default function SignIn() {
             className="w-full"
             disabled={loading}
             onClick={async () => {
-              await authClient.signIn.email(
+              (await authClient.signIn.email(
                 {
                   email,
                   password,
@@ -91,8 +93,12 @@ export default function SignIn() {
                   onResponse: (ctx) => {
                     setLoading(false);
                   },
+                  onSuccess: async () => {
+                    router.push("/");
+                  },
                 }
-              );
+              ),
+                redirect("/"));
             }}
           >
             {loading ? (
