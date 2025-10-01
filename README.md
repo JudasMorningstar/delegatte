@@ -7,7 +7,7 @@ This setup uses Better Auth with Convex as the database adapter in a monorepo wi
 ## Architecture
 
 - **Shared Package** (`packages/backend`): Contains Convex schema, auth configuration, and shared client
-- **Web App** (`apps/dashboard`): Hosts the auth API endpoints and web interface
+- **Web App** (`apps/web`): Hosts the auth API endpoints and web interface
 - **Mobile App** (`apps/mobile`): Calls the web app's auth endpoints
 
 ## Installation Steps
@@ -19,16 +19,13 @@ This setup uses Better Auth with Convex as the database adapter in a monorepo wi
 pnpm install
 
 # Backend package
-cd packages/backend
-pnpm install
+pnpm -F backend install
 
 # Web app
-cd ../../apps/dahboard
-pnpm install better-auth
+pnpm -F web install better-auth
 
 # Mobile app
-cd ../mobile
-pnpm install expo-web-browser expo-auth-session expo-secure-store
+pnpm -F mobile install expo-web-browser expo-auth-session expo-secure-store
 ```
 
 ### 2. Setup Convex
@@ -40,7 +37,7 @@ cd packages/backend
 npx convex login
 
 # Initialize and deploy
-npx convex dev
+pnpm run setup
 ```
 
 This will:
@@ -140,17 +137,8 @@ const redirectUri = makeRedirectUri({
 ### 7. Start Development
 
 ```bash
-# Terminal 1: Backend (Convex)
-cd packages/backend
+# This will spin up all your apps: Backend (Convex), Dashboard (Tanstack-start), Mobile (Expo), Landing (Astro)
 pnpm dev
-
-# Terminal 2: Web app
-cd apps/web
-pnpm dev
-
-# Terminal 3: Mobile app
-cd apps/mobile
-pnpm start
 ```
 
 ## Usage Examples
@@ -435,4 +423,5 @@ Update OAuth providers with production URLs:
 - [Better Auth Documentation](https://better-auth.com)
 - [Convex Documentation](https://docs.convex.dev)
 - [TanStack Start Documentation](https://tanstack.com/start)
+- [NextJs Documentation](https://nextjs.org/docs)
 - [Expo Documentation](https://docs.expo.dev)
