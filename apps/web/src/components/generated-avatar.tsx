@@ -1,8 +1,11 @@
 import { createAvatar } from "@dicebear/core";
 import { botttsNeutral, initials } from "@dicebear/collection";
-
-import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "@delegatte/ui/components/avatar";
+import { cn } from "@delegatte/ui/lib/utils";
 
 interface GeneratedAvatarProps {
   className?: string;

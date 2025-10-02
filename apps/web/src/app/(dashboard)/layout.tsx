@@ -1,13 +1,12 @@
 "use client";
 
-export default function StudioLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { AuthGuard } from "@/modules/auth/ui/components/auth-guard";
+import { OrganizationGuard } from "@/modules/auth/ui/components/organization-guard";
+
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="relative flex min-h-screen flex-col">
-      <main className="flex-1">{children}</main>
-    </section>
+    <AuthGuard>
+      <OrganizationGuard>{children}</OrganizationGuard>
+    </AuthGuard>
   );
 }

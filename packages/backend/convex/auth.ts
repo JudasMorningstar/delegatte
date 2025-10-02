@@ -4,9 +4,11 @@ import { components } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
 import { betterAuth } from "better-auth";
 import authSchema from "./betterAuth/schema";
+import { organization } from "better-auth/plugins";
 
 const siteUrl = process.env.SITE_URL!;
 
+// export const authComponent = createClient<DataModel>(components.betterAuth);
 export const authComponent = createClient<DataModel, typeof authSchema>(
   components.betterAuth,
   {
@@ -40,6 +42,6 @@ export const createAuth = (
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       },
     },
-    plugins: [convex()],
+    plugins: [convex(), organization()],
   });
 };

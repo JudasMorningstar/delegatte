@@ -17,6 +17,10 @@
       "cache": false,
       "persistent": true
     },
+    "ui-add": {
+      "cache": false,
+      "interactive": true
+    },
     "setup": {
       "cache": false,
       "persistent": true

@@ -74,6 +74,7 @@ export declare const components: {
               }
             | {
                 data: {
+                  activeOrganizationId?: null | string;
                   createdAt: number;
                   expiresAt: number;
                   ipAddress?: null | string;
@@ -118,6 +119,36 @@ export declare const components: {
                   publicKey: string;
                 };
                 model: "jwks";
+              }
+            | {
+                data: {
+                  createdAt: number;
+                  logo?: null | string;
+                  metadata?: null | string;
+                  name: string;
+                  slug?: null | string;
+                };
+                model: "organization";
+              }
+            | {
+                data: {
+                  createdAt: number;
+                  organizationId: string;
+                  role: string;
+                  userId: string;
+                };
+                model: "member";
+              }
+            | {
+                data: {
+                  email: string;
+                  expiresAt: number;
+                  inviterId: string;
+                  organizationId: string;
+                  role?: null | string;
+                  status: string;
+                };
+                model: "invitation";
               };
           onCreateHandle?: string;
           select?: Array<string>;
@@ -174,6 +205,7 @@ export declare const components: {
                     | "ipAddress"
                     | "userAgent"
                     | "userId"
+                    | "activeOrganizationId"
                     | "id";
                   operator?:
                     | "lt"
@@ -269,6 +301,99 @@ export declare const components: {
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field: "publicKey" | "privateKey" | "createdAt" | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "organization";
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "name"
+                    | "slug"
+                    | "logo"
+                    | "createdAt"
+                    | "metadata"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "member";
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "userId"
+                    | "role"
+                    | "createdAt"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "invitation";
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "email"
+                    | "role"
+                    | "status"
+                    | "expiresAt"
+                    | "inviterId"
+                    | "id";
                   operator?:
                     | "lt"
                     | "lte"
@@ -351,6 +476,7 @@ export declare const components: {
                     | "ipAddress"
                     | "userAgent"
                     | "userId"
+                    | "activeOrganizationId"
                     | "id";
                   operator?:
                     | "lt"
@@ -465,6 +591,99 @@ export declare const components: {
                     | Array<number>
                     | null;
                 }>;
+              }
+            | {
+                model: "organization";
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "name"
+                    | "slug"
+                    | "logo"
+                    | "createdAt"
+                    | "metadata"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "member";
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "userId"
+                    | "role"
+                    | "createdAt"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "invitation";
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "email"
+                    | "role"
+                    | "status"
+                    | "expiresAt"
+                    | "inviterId"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
               };
           onDeleteHandle?: string;
         },
@@ -475,7 +694,15 @@ export declare const components: {
         "internal",
         {
           limit?: number;
-          model: "user" | "session" | "account" | "verification" | "jwks";
+          model:
+            | "user"
+            | "session"
+            | "account"
+            | "verification"
+            | "jwks"
+            | "organization"
+            | "member"
+            | "invitation";
           offset?: number;
           paginationOpts: {
             cursor: string | null;
@@ -515,7 +742,15 @@ export declare const components: {
         "query",
         "internal",
         {
-          model: "user" | "session" | "account" | "verification" | "jwks";
+          model:
+            | "user"
+            | "session"
+            | "account"
+            | "verification"
+            | "jwks"
+            | "organization"
+            | "member"
+            | "invitation";
           select?: Array<string>;
           where?: Array<{
             connector?: "AND" | "OR";
@@ -592,6 +827,7 @@ export declare const components: {
             | {
                 model: "session";
                 update: {
+                  activeOrganizationId?: null | string;
                   createdAt?: number;
                   expiresAt?: number;
                   ipAddress?: null | string;
@@ -610,6 +846,7 @@ export declare const components: {
                     | "ipAddress"
                     | "userAgent"
                     | "userId"
+                    | "activeOrganizationId"
                     | "id";
                   operator?:
                     | "lt"
@@ -731,6 +968,120 @@ export declare const components: {
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field: "publicKey" | "privateKey" | "createdAt" | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "organization";
+                update: {
+                  createdAt?: number;
+                  logo?: null | string;
+                  metadata?: null | string;
+                  name?: string;
+                  slug?: null | string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "name"
+                    | "slug"
+                    | "logo"
+                    | "createdAt"
+                    | "metadata"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "member";
+                update: {
+                  createdAt?: number;
+                  organizationId?: string;
+                  role?: string;
+                  userId?: string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "userId"
+                    | "role"
+                    | "createdAt"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "invitation";
+                update: {
+                  email?: string;
+                  expiresAt?: number;
+                  inviterId?: string;
+                  organizationId?: string;
+                  role?: null | string;
+                  status?: string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "email"
+                    | "role"
+                    | "status"
+                    | "expiresAt"
+                    | "inviterId"
+                    | "id";
                   operator?:
                     | "lt"
                     | "lte"
@@ -813,6 +1164,7 @@ export declare const components: {
             | {
                 model: "session";
                 update: {
+                  activeOrganizationId?: null | string;
                   createdAt?: number;
                   expiresAt?: number;
                   ipAddress?: null | string;
@@ -831,6 +1183,7 @@ export declare const components: {
                     | "ipAddress"
                     | "userAgent"
                     | "userId"
+                    | "activeOrganizationId"
                     | "id";
                   operator?:
                     | "lt"
@@ -952,6 +1305,120 @@ export declare const components: {
                 where?: Array<{
                   connector?: "AND" | "OR";
                   field: "publicKey" | "privateKey" | "createdAt" | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "organization";
+                update: {
+                  createdAt?: number;
+                  logo?: null | string;
+                  metadata?: null | string;
+                  name?: string;
+                  slug?: null | string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "name"
+                    | "slug"
+                    | "logo"
+                    | "createdAt"
+                    | "metadata"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "member";
+                update: {
+                  createdAt?: number;
+                  organizationId?: string;
+                  role?: string;
+                  userId?: string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "userId"
+                    | "role"
+                    | "createdAt"
+                    | "id";
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "invitation";
+                update: {
+                  email?: string;
+                  expiresAt?: number;
+                  inviterId?: string;
+                  organizationId?: string;
+                  role?: null | string;
+                  status?: string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field:
+                    | "organizationId"
+                    | "email"
+                    | "role"
+                    | "status"
+                    | "expiresAt"
+                    | "inviterId"
+                    | "id";
                   operator?:
                     | "lt"
                     | "lte"

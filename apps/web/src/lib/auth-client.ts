@@ -1,9 +1,10 @@
 import { convexClient } from "@convex-dev/better-auth/client/plugins";
 import { toast } from "@delegatte/ui/components/toast";
+import { organizationClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
-export const authClient: any = createAuthClient({
-  plugins: [convexClient()],
+export const authClient = createAuthClient({
+  plugins: [convexClient(), organizationClient()],
   fetchOptions: {
     onError(e) {
       if (e.error.status === 429) {
@@ -15,5 +16,3 @@ export const authClient: any = createAuthClient({
     },
   },
 });
-
-export const { signUp, signIn, signOut, useSession } = authClient;
