@@ -67,7 +67,9 @@ export function ProjectStep({
           id="projectDescription"
           placeholder="A documentary exploring the final frontiers of human exploration..."
           value={data.projectDescription}
-          onChange={(e) => onUpdate({ projectDescription: e.target.value })}
+          onChange={(e: any) =>
+            onUpdate({ projectDescription: e.target.value })
+          }
           rows={3}
           disabled={isLoading}
         />

@@ -52,12 +52,15 @@ const orgSchema = z.object({
 
 type OrgFormValues = z.infer<typeof orgSchema>;
 
-interface CreateOrgDialogProps {
+interface CreateWorkspaceDialogProps {
   children?: React.ReactNode;
   onSuccess?: (organization: any) => void;
 }
 
-export function CreateOrgDialog({ children, onSuccess }: CreateOrgDialogProps) {
+export function CreateWorkspaceDialog({
+  children,
+  onSuccess,
+}: CreateWorkspaceDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
@@ -94,19 +97,24 @@ export function CreateOrgDialog({ children, onSuccess }: CreateOrgDialogProps) {
           ? { description: values.description }
           : undefined,
       })
-      .then(({ data, error }) => {
+      .then(async ({ data, error }) => {
         if (error) {
           throw new Error(error.message || "Failed to create organization");
         }
 
-        // Reset form and close dialog
+        if (!data) throw new Error("No organization returned");
+
+        await authClient.organization.setActive({
+          organizationId: data.id,
+          organizationSlug: data.slug,
+        });
+
         form.reset();
         setOpen(false);
 
-        // Call success callback
         onSuccess?.(data);
 
-        if (data?.slug) {
+        if (data.slug) {
           router.push(`/${data.slug}/projects`);
         }
 

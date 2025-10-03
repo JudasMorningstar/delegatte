@@ -1,9 +1,10 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { useActiveOrganization } from "@/lib/auth-client";
 import { AuthLayout } from "../layouts/auth-layout";
 import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
+import { redirect } from "next/navigation";
 
 export const OrganizationGuard = ({
   children,
@@ -14,7 +15,7 @@ export const OrganizationGuard = ({
     data: activeOrganization,
     error,
     isPending,
-  } = authClient.useActiveOrganization();
+  } = useActiveOrganization();
 
   if (isPending) {
     <AuthLayout isAuth={true}>
@@ -34,6 +35,11 @@ export const OrganizationGuard = ({
       </AuthLayout>
     );
   }
+
+  if (!activeOrganization) {
+    redirect("/workspace-selection");
+  }
+
   if (error) {
     return (
       <AuthLayout isAuth={true}>

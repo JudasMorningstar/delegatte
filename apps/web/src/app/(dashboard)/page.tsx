@@ -4,26 +4,16 @@ import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
 import { useActiveOrganization } from "@/lib/auth-client";
 import { AuthLayout } from "@/modules/auth/ui/layouts/auth-layout";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default function StudioPage() {
   const {
     data: activeOrganization,
     error,
     isPending,
-    isRefetching,
   } = useActiveOrganization();
-  if (!activeOrganization) {
-    return (
-      <AuthLayout isAuth={true}>
-        <ErrorState
-          title="No Active Workspace Found"
-          description="You do not belong to any active workspace. Please contact support or create a new workspace."
-        />
-      </AuthLayout>
-    );
-  }
-  if (isPending && isRefetching) {
+
+  if (isPending) {
     return (
       <AuthLayout isAuth={true}>
         <LoadingState
@@ -33,8 +23,13 @@ export default function StudioPage() {
       </AuthLayout>
     );
   }
+
+  if (!activeOrganization) {
+    redirect("/workspace-selection");
+  }
+
   if (activeOrganization) {
-    redirect(`${activeOrganization.slug}/projects`);
+    redirect(`/${activeOrganization.slug}/projects`);
   }
 
   if (error) {

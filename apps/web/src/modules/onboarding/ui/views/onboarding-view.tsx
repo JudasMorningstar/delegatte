@@ -119,8 +119,8 @@ export const OnboardingPageView = () => {
 
       return { organization, projectId };
     })()
-      .then(({ organization }) => {
-        router.push(`/${organization.slug}/projects`);
+      .then(({ organization, projectId }) => {
+        router.push(`/${organization.slug}/projects/${projectId}`);
         return { organization };
       })
       .finally(() => {

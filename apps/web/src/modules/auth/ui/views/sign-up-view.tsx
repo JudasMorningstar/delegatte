@@ -118,7 +118,7 @@ export const SignUpView = () => {
               password,
               name: `${firstName} ${lastName}`,
 
-              callbackURL: "/onboarding",
+              callbackURL: "/",
               fetchOptions: {
                 onResponse: () => setLoading(false),
                 onRequest: () => setLoading(true),

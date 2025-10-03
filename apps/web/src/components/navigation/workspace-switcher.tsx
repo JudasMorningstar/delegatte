@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronsUpDown, Plus } from "lucide-react";
-
+import { ChevronsUpDown, Loader2, Plus } from "lucide-react";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -19,36 +18,45 @@ import {
   DropdownMenuSeparator,
 } from "@delegatte/ui/components/dropdown-menu";
 import { toast } from "@delegatte/ui/components/toast";
-import { CreateOrgDialog } from "@/modules/auth/ui/components/create-org-dialog";
-
 import { GeneratedAvatar } from "@/components/generated-avatar";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { CreateWorkspaceDialog } from "@/modules/auth/ui/components/create-org-dialog";
 
-export function OrgSwitcher({
-  organizations,
-}: {
+interface WorkspaceSwitcherProps {
   organizations: {
     id: string;
     name: string;
     slug: string;
     createdAt: Date;
-    logo?: string | null | undefined;
+    logo?: string | null;
     metadata?: any;
   }[];
-}) {
+}
+
+export function WorkspaceSwitcher({ organizations }: WorkspaceSwitcherProps) {
   const { isMobile } = useSidebar();
-  const [activeOrg, setActiveOrg] = React.useState(organizations[0]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const router = useRouter();
+  const params = useParams();
+  const currentSlug = params.slug as string;
 
-  if (!activeOrg) {
-    return null;
-  }
+  // Find active workspace based on current URL slug
+  const activeWorkspace = React.useMemo(() => {
+    return (
+      organizations.find((org) => org.slug === currentSlug) || organizations[0]
+    );
+  }, [organizations, currentSlug]);
 
-  const handleOrgSwitch = async (org: (typeof organizations)[0]) => {
-    if (org.id === activeOrg.id) return; // Already active
+  const [switchingWorkspace, setSwitchingWorkspace] = React.useState<
+    string | null
+  >(null);
 
-    setIsLoading(true);
+  if (!activeWorkspace) return null;
+
+  const handleWorkspaceSwitch = async (org: (typeof organizations)[0]) => {
+    if (org.id === activeWorkspace.id) return;
+
+    setSwitchingWorkspace(org.id);
 
     const switchPromise = authClient.organization
       .setActive({
@@ -56,16 +64,15 @@ export function OrgSwitcher({
         organizationSlug: org.slug,
       })
       .then(({ data, error }) => {
-        if (error) {
+        if (error)
           throw new Error(error.message || "Failed to switch workspace");
-        }
 
-        // Update local state only if API call succeeds
-        setActiveOrg(org);
+        // Navigate to the new workspace
+        router.push(`/${org.slug}/projects`);
         return data;
       })
       .finally(() => {
-        setIsLoading(false);
+        setSwitchingWorkspace(null);
       });
 
     toast.promise(switchPromise, {
@@ -82,20 +89,26 @@ export function OrgSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
+              disabled={switchingWorkspace !== null}
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              disabled={isLoading}
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                <GeneratedAvatar
-                  seed={activeOrg.name}
-                  variant="botttsNeutral"
-                  className="size-4"
-                />
-              </div>
+              <GeneratedAvatar
+                seed={activeWorkspace.name}
+                variant="botttsNeutral"
+                className="size-5"
+              />
+
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeOrg.name}</span>
+                <span className="truncate font-medium">
+                  {activeWorkspace.name}
+                </span>
               </div>
-              <ChevronsUpDown className="ml-auto" />
+
+              {switchingWorkspace ? (
+                <Loader2 className="ml-auto h-4 w-4 animate-spin" />
+              ) : (
+                <ChevronsUpDown className="ml-auto" />
+              )}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -110,37 +123,40 @@ export function OrgSwitcher({
             {organizations.map((org, index) => (
               <DropdownMenuItem
                 key={org.id}
-                onClick={() => handleOrgSwitch(org)}
+                onClick={() => handleWorkspaceSwitch(org)}
+                disabled={
+                  switchingWorkspace !== null || org.id === activeWorkspace.id
+                }
                 className="gap-2 p-2"
-                disabled={isLoading || org.id === activeOrg.id}
               >
-                <div className="flex size-6 items-center justify-center rounded-md border">
-                  <GeneratedAvatar
-                    seed={org.name}
-                    variant="botttsNeutral"
-                    className="size-3.5 shrink-0"
-                  />
+                <GeneratedAvatar
+                  seed={org.name}
+                  variant="botttsNeutral"
+                  className="size-3.5 shrink-0"
+                />
+                <div className="flex-1 flex items-center justify-between">
+                  <span className="truncate">{org.name}</span>
+                  {org.id === activeWorkspace.id && !switchingWorkspace && (
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      Active
+                    </span>
+                  )}
+                  {switchingWorkspace === org.id && (
+                    <Loader2 className="h-3 w-3 animate-spin ml-2" />
+                  )}
                 </div>
-                {org.name}
-                {org.id === activeOrg.id && (
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    Active
-                  </span>
-                )}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <CreateOrgDialog
+            <CreateWorkspaceDialog
               onSuccess={(newOrg) => {
-                // Optionally refresh organizations list or navigate
-                redirect(`/org/${newOrg.slug}/projects`); // Navigate to new org
+                router.push(`/${newOrg.slug}/projects`);
               }}
             >
               <DropdownMenuItem
                 className="gap-2 p-2"
-                disabled={isLoading}
-                onSelect={(e) => e.preventDefault()} // Prevent dropdown from closing
+                onSelect={(e) => e.preventDefault()}
               >
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                   <Plus className="size-4" />
@@ -149,7 +165,7 @@ export function OrgSwitcher({
                   Add workspace
                 </div>
               </DropdownMenuItem>
-            </CreateOrgDialog>
+            </CreateWorkspaceDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
