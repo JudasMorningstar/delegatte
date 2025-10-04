@@ -1,74 +1,66 @@
 // packages/backend/convex/schema.ts
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { s } from "node_modules/better-auth/dist/shared/better-auth.DOq11zLi";
 
 export default defineSchema({
-  // Projects table
   projects: defineTable({
     name: v.string(),
     description: v.optional(v.string()),
     status: v.string(),
     startDate: v.number(),
     endDate: v.number(),
-    organizationId: v.string(), // Changed from v.id("organization")
+    organizationId: v.string(), // Correct - Better Auth uses strings
     isActive: v.boolean(),
-    createdBy: v.string(), // Changed from v.string()
+    createdBy: v.string(), // Correct - Better Auth uses strings
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("organizationId", ["organizationId"])
     .index("createdBy", ["createdBy"]),
 
-  // Project members table
   projectMembers: defineTable({
-    projectId: v.string(), // Changed from v.id("projects")
-    userId: v.string(),
+    projectId: v.id("projects"), // CHANGED: Should be v.id for Convex references
+    userId: v.string(), // Correct - Better Auth user ID
     role: v.string(),
-    daysBooked: v.array(v.string()), // Store as ISO date string, or use v.number() for timestamp
-    dailyRate: v.optional(v.string()), // Use string for decimal, or v.float64()
+    daysBooked: v.array(v.string()),
+    dailyRate: v.optional(v.string()),
     notes: v.optional(v.string()),
-    invitedBy: v.string(),
-    joinedAt: v.number(), // Timestamp (ms since epoch)
-    updatedAt: v.number(), // Timestamp (ms since epoch)
+    addedBy: v.string(), // Renamed from invitedBy
+    addedAt: v.number(), // Renamed from joinedAt
+    updatedAt: v.number(),
     isActive: v.boolean(),
   })
-    .index("by_project_user", ["projectId", "userId"]) // For uniqueness
+    .index("by_project_user", ["projectId", "userId"])
     .index("by_project", ["projectId"])
     .index("by_user", ["userId"]),
 
   tasks: defineTable({
-    projectId: v.string(),
+    projectId: v.id("projects"), // CHANGED: Should be v.id for Convex references
     title: v.string(),
+    description: v.optional(v.string()), // ADDED: Missing from your schema
     notes: v.optional(v.string()),
-    // status: v.union(
-    //   v.literal("todo"),
-    //   v.literal("in_progress"),
-    //   v.literal("completed")
-    // ), // Enum as union of literals
-    status: v.string(), // Store enum values as strings in Convex
-    assignedTo: v.optional(v.string()), // Nullable reference
-    dueDate: v.optional(v.number()), // Store ISO date string, or use v.optional(v.number()) for timestamp
-    createdBy: v.id("user"),
-    createdAt: v.number(), // Timestamp (ms since epoch)
-    updatedAt: v.number(), // Timestamp (ms since epoch)
+    status: v.string(),
+    assignedTo: v.optional(v.string()), // Better Auth user ID
+    dueDate: v.optional(v.number()),
+    createdBy: v.string(), // CHANGED: Should be string for Better Auth
+    createdAt: v.number(),
+    updatedAt: v.number(),
   })
     .index("by_project", ["projectId"])
     .index("by_assignedTo", ["assignedTo"])
     .index("by_createdBy", ["createdBy"])
     .index("by_status", ["status"]),
 
-  // Task Items table
   taskItems: defineTable({
-    taskId: v.string(), // Reference to tasks table
+    taskId: v.id("tasks"), // CHANGED: Should be v.id for Convex references
     title: v.string(),
     location: v.optional(v.string()),
-    priority: v.string(), // Enum values are stored as strings in Convex
+    priority: v.string(),
     isCompleted: v.boolean(),
-    attachments: v.optional(v.array(v.string())), // Array of strings for attachments
+    attachments: v.optional(v.array(v.string())),
     notes: v.optional(v.string()),
-    completedAt: v.optional(v.number()), // Timestamps as numbers (ms since epoch)
-    completedBy: v.optional(v.string()), // Reference to users table, nullable
+    completedAt: v.optional(v.number()),
+    completedBy: v.optional(v.string()), // Better Auth user ID
     createdAt: v.number(),
     updatedAt: v.number(),
   })

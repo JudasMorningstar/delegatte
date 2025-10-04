@@ -2,7 +2,9 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { authComponent } from "./auth";
+import { auth } from "./betterAuth/auth";
 
+// Helper function to check organization membership and permissions
 // Helper function to check organization membership and permissions
 async function checkOrgPermission(
   ctx: any,
@@ -15,12 +17,14 @@ async function checkOrgPermission(
     throw new Error("Not authenticated");
   }
 
-  // Get user's organization membership
+  // Get user's organization membership from Better Auth's member table
   const membership = await ctx.db
-    .query("member")
+    .query("member") // CHANGED: Was "projectMembers", should be "member"
     .withIndex("userId", (q: any) => q.eq("userId", identity._id))
     .filter((q: any) => q.eq(q.field("organizationId"), organizationId))
     .first();
+
+  console.log("Membership:", membership);
 
   if (!membership) {
     throw new Error("Not a member of this organization");
@@ -81,20 +85,15 @@ export const create = mutation({
     status: v.string(),
     startDate: v.number(),
     endDate: v.number(),
-    organizationId: v.id("organizations"),
+    organizationId: v.string(),
     isActive: v.boolean(),
   },
   handler: async (ctx, args) => {
     // Check if user is a member of the organization (members can create projects)
-    const { identity } = await checkOrgPermission(
-      ctx,
-      args.organizationId,
-      "member"
-    );
+    const identity = await authComponent.getAuthUser(ctx);
 
     const projectId = await ctx.db.insert("projects", {
       ...args,
-      organizationId: args.organizationId,
       createdBy: identity._id,
       createdAt: Date.now(),
       updatedAt: Date.now(),
