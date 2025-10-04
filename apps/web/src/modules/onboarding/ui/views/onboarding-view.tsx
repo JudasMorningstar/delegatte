@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowLeft, Sparkles, Film } from "lucide-react";
+import { ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
 
 import { Button } from "@delegatte/ui/components/button";
 import { Card, CardContent } from "@delegatte/ui/components/card";
@@ -11,7 +11,7 @@ import { api } from "@delegatte/backend/_generated/api";
 import { toast } from "@delegatte/ui/components/toast";
 
 import { authClient } from "@/lib/auth-client";
-import {
+import type {
   ValidationErrors,
   OnboardingData,
 } from "@/modules/onboarding/validations/onboarding-types";
@@ -137,14 +137,15 @@ export const OnboardingPageView = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-3xl">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center size-14 rounded-full bg-primary/10 mb-4">
-            <Film className="size-7 text-primary" />
+        <div className="space-y-3 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <Sparkles className="h-3 w-3" />
+            Onboarding Wizard
           </div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
+          <h1 className="text-3xl font-bold tracking-tight">
             Welcome to Delegatte
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Let's set up your workspace and first project
           </p>
         </div>

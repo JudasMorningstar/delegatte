@@ -10,6 +10,7 @@ import { CreateWorkspaceDialog } from "@/modules/auth/ui/components/create-org-d
 import { Button } from "@delegatte/ui/components/button";
 import { Card } from "@delegatte/ui/components/card";
 import { cn } from "@delegatte/ui/lib/utils";
+import { LoadingState } from "@/components/loading-state";
 
 export default function Page() {
   const router = useRouter();
@@ -51,17 +52,10 @@ export default function Page() {
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 py-12">
-        <div className="relative">
-          <div className="absolute inset-0 animate-ping">
-            <Loader2 className="h-8 w-8 text-primary/20" />
-          </div>
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-        <p className="text-sm text-muted-foreground animate-pulse">
-          Loading your workspaces...
-        </p>
-      </div>
+      <LoadingState
+        description="Please wait while we load your workspaces."
+        title={"Loading..."}
+      />
     );
   }
 
@@ -81,7 +75,7 @@ export default function Page() {
       </div>
 
       {!organizations || organizations.length === 0 ? (
-        <Card className="relative overflow-hidden border-dashed p-12 text-center">
+        <Card className="relative overflow-hidden border-dashed p-12 text-center mx-auto max-w-lg">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
           <div className="relative space-y-4">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">

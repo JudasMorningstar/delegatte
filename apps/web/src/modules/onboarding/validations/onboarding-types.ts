@@ -1,8 +1,9 @@
 export interface OnboardingData {
-  // Step 1: Organization
+  // Step 1: Organization/Workspace
   orgName: string;
   orgSlug: string;
   orgDescription: string;
+
   // Step 2: Project
   projectName: string;
   projectDescription: string;

@@ -81,7 +81,7 @@ export const create = mutation({
     status: v.string(),
     startDate: v.number(),
     endDate: v.number(),
-    organizationId: v.string(),
+    organizationId: v.id("organizations"),
     isActive: v.boolean(),
   },
   handler: async (ctx, args) => {
@@ -94,6 +94,7 @@ export const create = mutation({
 
     const projectId = await ctx.db.insert("projects", {
       ...args,
+      organizationId: args.organizationId,
       createdBy: identity._id,
       createdAt: Date.now(),
       updatedAt: Date.now(),

@@ -21,7 +21,7 @@ import { format } from "date-fns";
 import { cn } from "@delegatte/ui/lib/utils";
 import { FormField } from "./form-field";
 import { PROJECT_STATUS_OPTIONS } from "../../validations/onboarding-constants";
-import {
+import type {
   OnboardingData,
   ValidationErrors,
 } from "../../validations/onboarding-types";

@@ -1,4 +1,4 @@
-import type { StepConfig } from "./onboarding";
+import type { StepConfig } from "./onboarding-types";
 
 export const STEPS: StepConfig[] = [
   {
@@ -22,3 +22,20 @@ export const PROJECT_STATUS_OPTIONS = [
   { value: "post-production", label: "Post-Production" },
   { value: "completed", label: "Completed" },
 ];
+
+// export const ONBOARDING_STEPS: OnboardingStep[] = [
+//   "welcome",
+//   "create-workspace",
+//   "create-project",
+//   "invite-team",
+//   "success",
+// ];
+
+// export const initialOnboardingData: OnboardingData = {
+//   workspaceName: "",
+//   workspaceLogo: null,
+//   projectName: "",
+//   projectDescription: "",
+//   projectTemplate: "scratch",
+//   inviteEmails: [],
+// };
