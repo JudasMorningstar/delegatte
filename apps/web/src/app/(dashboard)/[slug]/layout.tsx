@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   return (
     <AuthGuard>
       <SidebarProvider>
-        <AppSidebar variant="inset" slug={slug} />
+        <AppSidebar collapsible="icon" slug={slug} />
         <SidebarInset>
           <NavBar />
           <OrganizationGuard>

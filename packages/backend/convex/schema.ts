@@ -28,6 +28,7 @@ export default defineSchema({
     addedBy: v.string(), // Renamed from invitedBy
     addedAt: v.number(), // Renamed from joinedAt
     updatedAt: v.number(),
+    canManage: v.boolean(),
     isActive: v.boolean(),
   })
     .index("by_project_user", ["projectId", "userId"])

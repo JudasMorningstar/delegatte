@@ -35,7 +35,7 @@ export function AppSidebar({ slug, ...props }: AppSidebarProps) {
   const { data: organizations, isPending, error } = useListOrganizations();
 
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar {...props}>
       <SidebarHeader>
         <div className="mb-4  text-sm font-medium">
           {isPending ? (

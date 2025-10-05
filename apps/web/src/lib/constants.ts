@@ -31,11 +31,6 @@ export interface ProjectNavItem {
 
 export const dashboardNavItems = {
   navMain: [
-    // {
-    //   title: "Overview",
-    //   url: "/dashboard/:slug",
-    //   icon: Home,
-    // },
     {
       title: "Calendar",
       url: ":slug/calendar",
@@ -104,17 +99,21 @@ export const generateSecondaryItems = (slug: string) => {
 
 export const generateDashboardNavItems = (slug: string) => {
   if (!slug || typeof slug !== "string") {
-    throw new Error("Invalid slug provided to generateSecondaryItems");
+    throw new Error("Invalid slug provided to generateDashboardNavItems");
   }
   return dashboardNavItems.navMain.map((item) => {
-    const url = item.url.replace(":slug", slug);
+    const url = item.url.startsWith(":slug")
+      ? `/${slug}${item.url.replace(":slug", "")}`
+      : item.url;
     if ("items" in item) {
       return {
         ...item,
         url,
         items: item.items.map((subItem) => ({
           ...subItem,
-          url: subItem.url.replace(":slug", slug),
+          url: subItem.url.startsWith(":slug")
+            ? `/${slug}${subItem.url.replace(":slug", "")}`
+            : subItem.url,
         })),
       };
     }

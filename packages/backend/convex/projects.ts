@@ -2,7 +2,7 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { authComponent } from "./auth";
-import { auth } from "./betterAuth/auth";
+import { findOne } from "./betterAuth/adapter";
 
 // Helper function to check organization membership and permissions
 // Helper function to check organization membership and permissions
@@ -18,11 +18,13 @@ async function checkOrgPermission(
   }
 
   // Get user's organization membership from Better Auth's member table
-  const membership = await ctx.db
-    .query("member") // CHANGED: Was "projectMembers", should be "member"
-    .withIndex("userId", (q: any) => q.eq("userId", identity._id))
-    .filter((q: any) => q.eq(q.field("organizationId"), organizationId))
-    .first();
+  const membership = await ctx.runQuery(findOne, {
+    model: "member",
+    where: [
+      { field: "userId", value: identity._id },
+      { field: "organizationId", value: organizationId },
+    ],
+  });
 
   console.log("Membership:", membership);
 

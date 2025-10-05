@@ -1,3 +1,5 @@
+// packages/backend/convex/betterAuth/schema.ts
+
 import { defineSchema } from "convex/server";
 import { tables } from "./generatedSchema";
 

@@ -90,12 +90,12 @@ export function WorkspaceSwitcher({ organizations }: WorkspaceSwitcherProps) {
             <SidebarMenuButton
               size="lg"
               disabled={switchingWorkspace !== null}
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
             >
               <GeneratedAvatar
                 seed={activeWorkspace.name}
                 variant="botttsNeutral"
-                className="size-5"
+                className="size-8 rounded-lg shrink-0"
               />
 
               <div className="grid flex-1 text-left text-sm leading-tight">

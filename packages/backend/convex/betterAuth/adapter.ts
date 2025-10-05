@@ -1,3 +1,4 @@
+// packages/backend/convex/betterAuth/adapter.ts
 import { createApi } from "@convex-dev/better-auth";
 import schema from "./schema";
 import { createAuth } from "../auth";
