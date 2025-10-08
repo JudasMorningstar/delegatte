@@ -1,11 +1,19 @@
+import { Button } from "@delegatte/ui/components/button";
 import { AlertCircleIcon } from "lucide-react";
 
 interface ErrorStateProps {
   title: string;
   description: string;
+  buttonText?: string;
+  onButtonClick?: () => void;
 }
 
-export const ErrorState = ({ title, description }: ErrorStateProps) => {
+export const ErrorState = ({
+  title,
+  description,
+  buttonText,
+  onButtonClick,
+}: ErrorStateProps) => {
   return (
     <div className="flex flex-1 items-center justify-center px-4 py-12">
       <div className="relative w-full max-w-md">
@@ -40,6 +48,17 @@ export const ErrorState = ({ title, description }: ErrorStateProps) => {
               {description}
             </p>
           </div>
+
+          {/* Optional button */}
+          {buttonText && onButtonClick && (
+            <Button
+              type="button"
+              onClick={onButtonClick}
+              className="mt-2 rounded-lg bg-destructive/60 px-4 py-2 text-sm font-medium shadow"
+            >
+              {buttonText}
+            </Button>
+          )}
 
           {/* Error pulse dots animation */}
           <div className="flex items-center gap-2">

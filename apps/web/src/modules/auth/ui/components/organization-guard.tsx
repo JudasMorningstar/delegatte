@@ -1,23 +1,32 @@
 "use client";
 
-import { useActiveOrganization, useSession } from "@/lib/auth-client";
+import {
+  useActiveOrganization,
+  useListOrganizations,
+  useSession,
+} from "@/lib/auth-client";
 import { AuthLayout } from "../layouts/auth-layout";
 import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 
+interface OrganizationGuardProps {
+  slug: string;
+  children: React.ReactNode;
+}
 export const OrganizationGuard = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+  slug,
+}: OrganizationGuardProps) => {
   const { data: session, isPending: sessionPending } = useSession();
   const {
     data: activeOrganization,
     error,
     isPending: orgPending,
   } = useActiveOrganization();
+
+  const { data: organizations } = useListOrganizations();
 
   // Combined loading state
   const isLoading = sessionPending || orgPending;
@@ -72,22 +81,12 @@ export const OrganizationGuard = ({
     );
   }
 
-  // Verify user is actually a member of the active organization
-  const isMember = activeOrganization.members?.some(
-    (member) => member.userId === session?.user?.id
-  );
+  const isMember = organizations?.some((org) => org.slug === slug);
+  console.log("Is member:", isMember);
 
   if (!isMember) {
-    return (
-      <AuthLayout isAuth={true}>
-        <ErrorState
-          title="Access Denied"
-          description="You are not a member of this workspace. Please contact an administrator."
-        />
-      </AuthLayout>
-    );
+    redirect("/access-denied");
   }
 
-  // All checks passed
   return <>{children}</>;
 };
