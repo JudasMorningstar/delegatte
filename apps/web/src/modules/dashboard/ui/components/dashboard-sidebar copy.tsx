@@ -7,21 +7,23 @@ import {
   Sidebar,
   SidebarFooter,
 } from "@delegatte/ui/components/sidebar";
-import { NavMain } from "./nav-main";
-import { NavUser } from "./nav-user";
-import { WorkspaceSwitcher } from "@/components/navigation/workspace-switcher";
+
 import { useListOrganizations } from "@/lib/auth-client";
+
+import { WorkspaceSwitcher } from "@/modules/dashboard/ui/components/workspace-switcher";
 import {
   generateDashboardNavItems,
   generateSecondaryItems,
-} from "@/lib/constants";
-import { NavSecondary } from "./nav-secondary";
+} from "@/modules/dashboard/validations/constants";
+import { DashboardNavMain } from "@/modules/dashboard/ui/components/dahboard-nav-main";
+import { DashboardNavSecondary } from "@/modules/dashboard/ui/components/dashboard-nav-secondary";
+import { DashboardUser } from "@/modules/dashboard/ui/components/dashboard-user";
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+interface DashboardSidebarProps extends React.ComponentProps<typeof Sidebar> {
   slug: string;
 }
 
-export function AppSidebar({ slug, ...props }: AppSidebarProps) {
+export function DashboardSidebar({ slug, ...props }: DashboardSidebarProps) {
   const generatedNavItems = React.useMemo(
     () => generateDashboardNavItems(slug),
     [slug]
@@ -55,12 +57,12 @@ export function AppSidebar({ slug, ...props }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={generatedNavItems} />
-        <NavSecondary items={generatedSecondaryItems} />
+        <DashboardNavMain items={generatedNavItems} />
+        <DashboardNavSecondary items={generatedSecondaryItems} />
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser />
+        <DashboardUser />
       </SidebarFooter>
     </Sidebar>
   );

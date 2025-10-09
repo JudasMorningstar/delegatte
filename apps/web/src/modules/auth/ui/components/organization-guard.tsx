@@ -15,6 +15,7 @@ interface OrganizationGuardProps {
   slug: string;
   children: React.ReactNode;
 }
+
 export const OrganizationGuard = ({
   children,
   slug,
@@ -26,10 +27,11 @@ export const OrganizationGuard = ({
     isPending: orgPending,
   } = useActiveOrganization();
 
-  const { data: organizations } = useListOrganizations();
+  const { data: organizations, isPending: orgListPending } =
+    useListOrganizations();
 
   // Combined loading state
-  const isLoading = sessionPending || orgPending;
+  const isLoading = sessionPending || orgPending || orgListPending;
 
   // Check if user is authenticated
   useEffect(() => {
@@ -40,10 +42,14 @@ export const OrganizationGuard = ({
 
   // Check if user has any organizations
   useEffect(() => {
-    if (!isLoading && session && !activeOrganization) {
+    if (
+      !isLoading &&
+      session &&
+      (!organizations || organizations.length === 0)
+    ) {
       redirect("/onboarding");
     }
-  }, [activeOrganization, session, isLoading]);
+  }, [organizations, session, isLoading]);
 
   // Loading state
   if (isLoading) {
@@ -69,7 +75,7 @@ export const OrganizationGuard = ({
     );
   }
 
-  // No active organization (shouldn't reach here due to useEffect redirect)
+  // No active organization
   if (!activeOrganization) {
     return (
       <AuthLayout isAuth={true}>
@@ -81,11 +87,20 @@ export const OrganizationGuard = ({
     );
   }
 
+  // Check if user is a member of the organization specified by slug
   const isMember = organizations?.some((org) => org.slug === slug);
-  console.log("Is member:", isMember);
 
-  if (!isMember) {
-    redirect("/access-denied");
+  if (!isMember && isLoading === false) {
+    return (
+      <AuthLayout isAuth={true}>
+        <ErrorState
+          title="Access Denied"
+          description="You don't have access to this workspace. Please contact an administrator or switch to a workspace you're a member of."
+          buttonText="Go to Workspace Selection"
+          onButtonClick={() => redirect("/workspace-selection")}
+        />
+      </AuthLayout>
+    );
   }
 
   return <>{children}</>;

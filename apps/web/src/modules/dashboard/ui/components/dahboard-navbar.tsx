@@ -3,11 +3,12 @@
 import { Button } from "@delegatte/ui/components/button";
 import { Separator } from "@delegatte/ui/components/separator";
 import { SidebarTrigger } from "@delegatte/ui/components/sidebar";
+import { Kbd, KbdGroup } from "@delegatte/ui/components/kbd";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
 import { DashboardCommand } from "./dash-command";
 
-export const NavBar = () => {
+export const DashboardNavBar = () => {
   const [commandOpen, setCommandOpen] = useState(false);
 
   useEffect(() => {
@@ -38,11 +39,11 @@ export const NavBar = () => {
         >
           <MagnifyingGlassIcon />
           Search...
-          <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground">
-            <span className="text-xs">&#8984;</span>
-
-            <span className="text-xs">K</span>
-          </kbd>
+          <p className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground">
+            <KbdGroup>
+              <Kbd>&#8984; + K</Kbd>
+            </KbdGroup>{" "}
+          </p>
         </Button>
       </header>
     </>

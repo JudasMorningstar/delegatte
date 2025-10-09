@@ -161,7 +161,7 @@ export function WorkspaceSwitcher({ organizations }: WorkspaceSwitcherProps) {
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                   <Plus className="size-4" />
                 </div>
-                <div className="font-medium text-muted-foreground">
+                <div className="font-medium text-muted-foreground ">
                   Add workspace
                 </div>
               </DropdownMenuItem>

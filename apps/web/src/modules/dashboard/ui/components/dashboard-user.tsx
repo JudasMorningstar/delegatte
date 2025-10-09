@@ -29,7 +29,7 @@ import { Skeleton } from "@delegatte/ui/components/skeleton";
 import { EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function NavUser() {
+export function DashboardUser() {
   const { isMobile } = useSidebar();
   const { data, isPending } = useSession();
   const router = useRouter();

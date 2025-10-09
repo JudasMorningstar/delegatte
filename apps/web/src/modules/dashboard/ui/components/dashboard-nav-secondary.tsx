@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@delegatte/ui/components/sidebar";
 
-export function NavSecondary({
+export function DashboardNavSecondary({
   items,
   ...props
 }: {

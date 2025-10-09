@@ -191,7 +191,7 @@ export function CreateWorkspaceDialog({
                   <FormControl>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">
-                        app.example.com/
+                        app.delegatte.com/
                       </span>
                       <Input
                         placeholder="acme-corp"

@@ -22,7 +22,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export function NavMain({
+export function DashboardNavMain({
   items,
 }: {
   items: {
