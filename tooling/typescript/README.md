@@ -1,3 +1,3 @@
-# `@delegatte/typescript-config`
+# `@delegatte/tsconfig`
 
 Shared typescript configuration for the workspace.

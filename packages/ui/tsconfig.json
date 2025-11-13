@@ -1,7 +1,21 @@
+// {
+//   "extends": "@delegatte/tsconfig/base.json",
+//   "compilerOptions": {
+//     "baseUrl": ".",
+//     "paths": {
+//       "@delegatte/ui/*": ["./src/*"]
+//     }
+//   },
+//   "include": [".", "./src/styles/global.d.ts"],
+//   "exclude": ["node_modules"]
+// }
+
 {
-  "extends": "@delegatte/typescript-config/react-library.json",
+  "extends": "@delegatte/tsconfig/base.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "jsx": "preserve",
+    "rootDir": ".",
     "paths": {
       "@delegatte/ui/*": ["./src/*"]
     }

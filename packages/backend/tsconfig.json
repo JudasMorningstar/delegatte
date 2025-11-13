@@ -1,5 +1,5 @@
 {
-  "extends": "@delegatte/typescript-config/react-library.json",
+  "extends": "@delegatte/tsconfig/base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

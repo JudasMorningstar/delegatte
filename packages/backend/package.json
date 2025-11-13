@@ -14,14 +14,14 @@
     "./env": "./env.ts"
   },
   "dependencies": {
-    "@convex-dev/better-auth": "^0.8.6",
-    "@t3-oss/env-nextjs": "^0.13.8",
-    "better-auth": "1.3.8",
-    "convex": "^1.27.3",
-    "zod": "^3.25.76"
+    "@convex-dev/better-auth": "catalog:",
+    "@t3-oss/env-core": "^0.13.8",
+    "better-auth": "catalog:",
+    "convex": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@delegatte/typescript-config": "workspace:*",
+    "@delegatte/tsconfig": "workspace:*",
     "@types/node": "^24.5.2",
     "@types/semver": "^7.7.1",
     "dotenv-cli": "^10.0.0",

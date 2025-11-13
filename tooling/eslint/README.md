@@ -1,3 +1,3 @@
-# `@delegatte/eslint-config`
+# `@delegatte/eslint`
 
 Shared eslint configuration for the workspace.
