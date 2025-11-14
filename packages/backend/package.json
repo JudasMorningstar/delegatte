@@ -15,14 +15,20 @@
   },
   "dependencies": {
     "@convex-dev/better-auth": "catalog:",
+    "@convex-dev/resend": "^0.1.13",
+    "@react-email/components": "^1.0.1",
     "@t3-oss/env-core": "^0.13.8",
     "better-auth": "catalog:",
     "convex": "catalog:",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@delegatte/tsconfig": "workspace:*",
     "@types/node": "^24.5.2",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
     "@types/semver": "^7.7.1",
     "dotenv-cli": "^10.0.0",
     "typescript": "latest"

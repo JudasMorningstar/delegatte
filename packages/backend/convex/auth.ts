@@ -2,9 +2,16 @@ import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { components } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
-import { betterAuth } from "better-auth";
+import { betterAuth, BetterAuthOptions } from "better-auth";
 import authSchema from "./betterAuth/schema";
-import { organization } from "better-auth/plugins";
+import { emailOTP, magicLink, organization } from "better-auth/plugins";
+import {
+  sendEmailVerification,
+  sendMagicLink,
+  sendOTPVerification,
+  sendResetPassword,
+} from "./email";
+import { requireActionCtx } from "@convex-dev/better-auth/utils";
 
 const siteUrl = process.env.SITE_URL!;
 
@@ -28,9 +35,29 @@ export const createAuth = (
     },
     baseURL: siteUrl,
     database: authComponent.adapter(ctx),
+    account: {
+      accountLinking: {
+        enabled: true,
+        allowDifferentEmails: true,
+      },
+    },
+    emailVerification: {
+      sendVerificationEmail: async ({ user, url }) => {
+        await sendEmailVerification(requireActionCtx(ctx), {
+          to: user.email,
+          url,
+        });
+      },
+    },
     emailAndPassword: {
       enabled: true,
-      requireEmailVerification: false,
+      requireEmailVerification: true,
+      sendResetPassword: async ({ user, url }) => {
+        await sendResetPassword(requireActionCtx(ctx), {
+          to: user.email,
+          url,
+        });
+      },
     },
     socialProviders: {
       github: {
@@ -42,6 +69,25 @@ export const createAuth = (
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       },
     },
-    plugins: [convex(), organization()],
-  });
+    plugins: [
+      convex(),
+      organization(),
+      magicLink({
+        sendMagicLink: async ({ email, url }) => {
+          await sendMagicLink(requireActionCtx(ctx), {
+            to: email,
+            url,
+          });
+        },
+      }),
+      emailOTP({
+        async sendVerificationOTP({ email, otp }) {
+          await sendOTPVerification(requireActionCtx(ctx), {
+            to: email,
+            code: otp,
+          });
+        },
+      }),
+    ],
+  } satisfies BetterAuthOptions);
 };
