@@ -45,7 +45,7 @@ export default function OAuthSignInButton({
     >
       {loading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
       <Icon className="mr-2 h-4 w-4" />{" "}
-      <span className="capitalize">Login with {provider}</span>
+      <span className="capitalize">Continue with {provider}</span>
     </Button>
   );
 }

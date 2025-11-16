@@ -28,11 +28,15 @@ import {
 import { Skeleton } from "@delegatte/ui/components/skeleton";
 import { EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { f } from "node_modules/better-auth/dist/shared/better-auth.B955zZIT";
 
 export function DashboardUser() {
   const { isMobile } = useSidebar();
   const { data, isPending } = useSession();
   const router = useRouter();
+
+  const userName = data?.user.email?.split("@")[0] || "User";
+  const displayName = userName.charAt(0).toUpperCase() + userName.slice(1);
 
   if (isPending || !data?.user) {
     return (
@@ -69,11 +73,14 @@ export function DashboardUser() {
                   <AvatarImage src={data.user.image} alt={data.user.name} />
                 </Avatar>
               ) : (
-                <GeneratedAvatar seed={data.user.name} variant={"initials"} />
+                <GeneratedAvatar
+                  seed={data.user.name || displayName}
+                  variant={"initials"}
+                />
               )}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold capitalize">
-                  {data?.user.name ?? ""}
+                  {data?.user.name ?? displayName}
                 </span>
                 <span className="truncate text-xs">{data?.user.email}</span>
               </div>
@@ -93,8 +100,12 @@ export function DashboardUser() {
                     src={data?.user.image ?? ""}
                     alt={data?.user.name ?? ""}
                   />
-                  <GeneratedAvatar seed={data.user.name} variant={"initials"} />
+                  <GeneratedAvatar
+                    seed={data.user.name || displayName}
+                    variant={"initials"}
+                  />
                 </Avatar>
+
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold capitalize">
                     {data?.user.name ?? ""}

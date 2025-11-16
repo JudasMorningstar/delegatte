@@ -5,7 +5,7 @@ import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
 import { SignInView } from "../views/sign-in-view";
 import { AuthLayout } from "../layouts/auth-layout";
 import { LoadingState } from "@/components/loading-state";
-import { f } from "node_modules/better-auth/dist/shared/better-auth.DFpuqBlM";
+import { SigninForm } from "./signin-form";
 
 export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -23,7 +23,11 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
       </AuthLoading>
       <Unauthenticated>
         <AuthLayout isAuth={true}>
-          <SignInView />
+          <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+            <div className="w-full max-w-sm">
+              <SigninForm />
+            </div>
+          </div>
         </AuthLayout>
       </Unauthenticated>
     </>

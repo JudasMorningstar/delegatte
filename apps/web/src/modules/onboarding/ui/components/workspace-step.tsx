@@ -1,88 +1,75 @@
 "use client";
 
-import { Input } from "@delegatte/ui/components/input";
-import { Textarea } from "@delegatte/ui/components/textarea";
-// import { FormField } from "./form-field";
-import type {
-  OnboardingData,
-  ValidationErrors,
-} from "@/modules/onboarding/validations/onboarding-types";
-import { Sparkles } from "lucide-react";
-import { FormField } from "./form-field";
+import React from "react";
+import { Building2 } from "lucide-react";
+import { useOnboarding } from "@/lib/contexts/onboarding-context";
+import { Card } from "@delegatte/ui/components/card";
+import { CreateWorkspaceDialog } from "@/modules/auth/ui/components/create-org-dialog";
+import { TourTooltip } from "./tour-tooltip";
+import { TourStep } from "@delegatte/ui/components/guided-tour";
+import { Button } from "@delegatte/ui/components/button";
 
-interface WorkspaceStepProps {
-  data: OnboardingData;
-  errors: ValidationErrors;
-  isLoading: boolean;
-  onUpdate: (updates: Partial<OnboardingData>) => void;
-}
+export function WorkspaceStep() {
+  const { workspaceName, setWorkspace, nextStep } = useOnboarding();
 
-export function WorkspaceStep({
-  data,
-  errors,
-  isLoading,
-  onUpdate,
-}: WorkspaceStepProps) {
+  const handleWorkspaceCreated = (workspace: any) => {
+    setWorkspace(workspace.id, workspace.name);
+    nextStep();
+  };
+
   return (
-    <div className="space-y-6">
-      <FormField
-        label="Workspace Name"
-        htmlFor="orgName"
-        error={errors.orgName}
-        required
-      >
-        <Input
-          id="orgName"
-          placeholder="Acme Studios"
-          value={data.orgName}
-          onChange={(e: any) => onUpdate({ orgName: e.target.value })}
-          className={errors.orgName ? "border-destructive" : ""}
-          disabled={isLoading}
-          autoFocus
-        />
-      </FormField>
-
-      <FormField
-        label={
-          <span className="flex items-center gap-2">
-            Workspace Slug
-            <Sparkles className="size-3 text-muted-foreground" />
-          </span>
-        }
-        htmlFor="orgSlug"
-        error={errors.orgSlug}
-        required
-        hint="Auto-generated from name. Use lowercase letters, numbers, and hyphens"
-      >
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground whitespace-nowrap">
-            app.delegatte.com/
-          </span>
-          <Input
-            id="orgSlug"
-            placeholder="acme-studios"
-            value={data.orgSlug}
-            onChange={(e: any) => onUpdate({ orgSlug: e.target.value })}
-            className={errors.orgSlug ? "border-destructive" : ""}
-            disabled={isLoading}
-          />
+    <TourStep
+      id="workspace-creation"
+      title="Welcome to Onboarding"
+      content="Let's start by creating your workspace. A workspace is the main hub for organizing your projects and team members."
+      order={1}
+      position="bottom"
+    >
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-foreground">
+            Let's start with your workspace
+          </h2>
+          <p className="text-muted-foreground">
+            A workspace is the main hub for organizing your projects and team
+            members.
+          </p>
         </div>
-      </FormField>
 
-      <FormField
-        label="Description"
-        htmlFor="orgDescription"
-        hint="Optional: Tell us about your workspace"
-      >
-        <Textarea
-          id="orgDescription"
-          placeholder="A production company focused on documentary filmmaking..."
-          value={data.orgDescription}
-          onChange={(e: any) => onUpdate({ orgDescription: e.target.value })}
-          rows={3}
-          disabled={isLoading}
-        />
-      </FormField>
-    </div>
+        <Card className="p-8 border-2 border-dashed border-border">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
+              <Building2 className="h-8 w-8 text-primary" />
+            </div>
+
+            {workspaceName ? (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  ✓ Workspace created
+                </p>
+                <p className="text-lg font-semibold text-foreground">
+                  {workspaceName}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-foreground">
+                    Create Your Workspace
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Get started by naming your workspace
+                  </p>
+                </div>
+
+                <CreateWorkspaceDialog onSuccess={handleWorkspaceCreated}>
+                  <Button className="mt-4">Create Workspace</Button>
+                </CreateWorkspaceDialog>
+              </>
+            )}
+          </div>
+        </Card>
+      </div>
+    </TourStep>
   );
 }

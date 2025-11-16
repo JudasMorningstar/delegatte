@@ -79,6 +79,7 @@ export const createAuth = (
             url,
           });
         },
+        disableSignUp: false,
       }),
       emailOTP({
         async sendVerificationOTP({ email, otp }) {

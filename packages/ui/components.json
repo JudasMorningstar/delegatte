@@ -13,8 +13,11 @@
   "aliases": {
     "components": "@delegatte/ui/components",
     "utils": "@delegatte/ui/lib/utils",
-    "hooks": "@delegatte/ui/hooks",
+    "ui": "@delegatte/ui/components",
     "lib": "@delegatte/ui/lib",
-    "ui": "@delegatte/ui/components"
+    "hooks": "@delegatte/ui/hooks"
+  },
+  "registries": {
+    "@rigidui": "https://rigidui.com/r/{name}.json"
   }
 }

@@ -1,51 +1,94 @@
-import { Check } from "lucide-react";
-import { STEPS } from "@/modules/onboarding/validations/onboarding-constants";
+"use client";
 
-interface StepIndicatorProps {
-  currentStep: number;
-}
+import React from "react";
+import { CheckCircle2, Circle } from "lucide-react";
+import { useOnboarding } from "@/lib/contexts/onboarding-context";
 
-export function StepIndicator({ currentStep }: StepIndicatorProps) {
+type Step = {
+  id: string;
+  label: string;
+  description: string;
+};
+
+const STEPS: Step[] = [
+  { id: "workspace", label: "Workspace", description: "Create your workspace" },
+  { id: "project", label: "Project", description: "Create your first project" },
+  { id: "members", label: "Team", description: "Invite team members" },
+  { id: "complete", label: "Ready", description: "All set!" },
+];
+
+export function StepIndicator() {
+  const { currentStep } = useOnboarding();
+
+  const getStepStatus = (stepId: string) => {
+    const steps = ["workspace", "project", "members", "complete"];
+    const currentIndex = steps.indexOf(currentStep);
+    const stepIndex = steps.indexOf(stepId);
+
+    if (stepIndex < currentIndex) return "completed";
+    if (stepIndex === currentIndex) return "active";
+    return "pending";
+  };
+
   return (
-    <div className="mb-12">
+    <div className="w-full">
       <div className="flex items-center justify-between">
-        {STEPS.map((step, index) => (
-          <div key={step.id} className="flex items-center flex-1">
-            <div className="flex flex-col items-center gap-3 flex-1">
-              <div
-                className={`flex size-10 items-center justify-center rounded-full border-2 transition-all ${
-                  currentStep > step.id
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : currentStep === step.id
-                      ? "border-primary bg-background text-primary"
-                      : "border-border bg-background text-muted-foreground"
-                }`}
-              >
-                {currentStep > step.id ? (
-                  <Check className="size-5" />
-                ) : (
-                  <span className="text-sm font-semibold">{step.id}</span>
-                )}
-              </div>
-              <div className="text-center">
-                <p
-                  className={`text-sm font-medium ${
-                    currentStep >= step.id
-                      ? "text-foreground"
-                      : "text-muted-foreground"
+        {STEPS.map((step, index) => {
+          const status = getStepStatus(step.id);
+
+          return (
+            <React.Fragment key={step.id}>
+              <div className="flex flex-col items-center">
+                <div
+                  className={`mb-2 flex h-12 w-12 items-center justify-center rounded-full border-2 transition-all ${
+                    status === "completed"
+                      ? "border-primary bg-primary"
+                      : status === "active"
+                        ? "border-primary bg-primary/10"
+                        : "border-muted bg-muted/50"
                   }`}
                 >
-                  {step.title}
-                </p>
+                  {status === "completed" ? (
+                    <CheckCircle2 className="h-6 w-6 text-primary-foreground" />
+                  ) : (
+                    <Circle
+                      className={`h-6 w-6 ${
+                        status === "active"
+                          ? "text-primary"
+                          : "text-muted-foreground"
+                      }`}
+                    />
+                  )}
+                </div>
+                <div className="text-center">
+                  <p
+                    className={`text-sm font-medium transition-colors ${
+                      status === "active"
+                        ? "text-foreground"
+                        : status === "completed"
+                          ? "text-primary"
+                          : "text-muted-foreground"
+                    }`}
+                  >
+                    {step.label}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {step.description}
+                  </p>
+                </div>
               </div>
-            </div>
-            {index < STEPS.length - 1 && (
-              <div
-                className={`h-[2px] flex-1 transition-all ${currentStep > step.id ? "bg-primary" : "bg-border"}`}
-              />
-            )}
-          </div>
-        ))}
+
+              {index < STEPS.length - 1 && (
+                <div
+                  className={`mb-8 h-1 flex-1 mx-2 transition-all ${
+                    status === "completed" ? "bg-primary" : "bg-muted"
+                  }`}
+                  style={{ minWidth: "40px" }}
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );

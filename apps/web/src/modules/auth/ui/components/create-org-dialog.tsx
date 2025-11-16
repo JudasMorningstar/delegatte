@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { redirect, useRouter } from "next/navigation";
+import { generateWorkspaceName } from "@/lib/generateWorkspaceName";
 
 const orgSchema = z.object({
   name: z
@@ -85,6 +86,22 @@ export function CreateWorkspaceDialog({
       form.setValue("slug", generatedSlug);
     }
   }, [watchName, form]);
+  function toTitleCaseFromSlug(slug: string) {
+    return slug
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
+  const handleGenerate = () => {
+    const generatedSlug = generateWorkspaceName(); // e.g., wild-fox-studio
+    const generatedName = toTitleCaseFromSlug(generatedSlug); // Wild Fox Studio
+
+    form.setValue("name", generatedName, {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
 
   const onSubmit = async (values: OrgFormValues) => {
     setIsLoading(true);
@@ -114,9 +131,9 @@ export function CreateWorkspaceDialog({
 
         onSuccess?.(data);
 
-        if (data.slug) {
-          router.push(`/${data.slug}/projects`);
-        }
+        // if (data.slug) {
+        //   router.push(`/${data.slug}/projects`);
+        // }
 
         return data;
       })
@@ -163,7 +180,21 @@ export function CreateWorkspaceDialog({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Workspace Name *</FormLabel>
+                  <FormLabel className="flex items-center justify-between">
+                    <span>Workspace Name *</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2 text-xs"
+                      onClick={handleGenerate}
+                      disabled={isLoading}
+                    >
+                      <Sparkles className="mr-1 size-3" />
+                      Generate
+                    </Button>
+                  </FormLabel>
+
                   <FormControl>
                     <Input
                       placeholder="Acme Corporation"
@@ -171,6 +202,7 @@ export function CreateWorkspaceDialog({
                       disabled={isLoading}
                     />
                   </FormControl>
+
                   <FormDescription>
                     This is your organization's display name
                   </FormDescription>
