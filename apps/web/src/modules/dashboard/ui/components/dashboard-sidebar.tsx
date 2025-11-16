@@ -23,6 +23,7 @@ import { DashboardNavMain } from "@/modules/dashboard/ui/components/dahboard-nav
 import { DashboardNavSecondary } from "@/modules/dashboard/ui/components/dashboard-nav-secondary";
 import { DashboardUser } from "@/modules/dashboard/ui/components/dashboard-user";
 import { Skeleton } from "@delegatte/ui/components/skeleton";
+import { DashboardProjects } from "./dashboard-projects";
 
 interface DashboardSidebarProps extends React.ComponentProps<typeof Sidebar> {
   slug: string;
@@ -67,6 +68,7 @@ export function DashboardSidebar({ slug, ...props }: DashboardSidebarProps) {
 
       <SidebarContent>
         <DashboardNavMain items={generatedNavItems} />
+        <DashboardProjects slug={slug} />
         <DashboardNavSecondary items={generatedSecondaryItems} />
       </SidebarContent>
       <SidebarRail />
