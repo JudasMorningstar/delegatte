@@ -3,6 +3,8 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { components } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
 import { betterAuth, BetterAuthOptions } from "better-auth";
+import { expo } from "@better-auth/expo";
+
 import authSchema from "./betterAuth/schema";
 import { emailOTP, magicLink, organization } from "better-auth/plugins";
 import {
@@ -38,7 +40,7 @@ export const createAuth = (
     account: {
       accountLinking: {
         enabled: true,
-        allowDifferentEmails: true,
+        trustedProviders: ["google", "github"],
       },
     },
     emailVerification: {
@@ -59,6 +61,18 @@ export const createAuth = (
         });
       },
     },
+    session: {
+      expiresIn: 60 * 60 * 24 * 7,
+      updateAge: 60 * 60 * 24,
+      cookieCache: {
+        enabled: true,
+        maxAge: 5 * 60,
+      },
+    },
+    rateLimit: {
+      window: 60,
+      max: 10,
+    },
     socialProviders: {
       github: {
         clientId: process.env.GITHUB_CLIENT_ID || "",
@@ -69,8 +83,10 @@ export const createAuth = (
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       },
     },
+    trustedOrigins: ["expo://", " delegatte://"],
     plugins: [
       convex(),
+      expo(),
       organization(),
       magicLink({
         sendMagicLink: async ({ email, url }) => {
